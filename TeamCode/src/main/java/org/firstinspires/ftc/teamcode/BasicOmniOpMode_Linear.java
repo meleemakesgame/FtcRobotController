@@ -70,7 +70,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double backRightPower = axial + lateral - yaw;
 
             // Modifiers for Motors
-            double launcherPowerMod = 0.9;
+            double launcherPower = 0.9;
 
             // weird math shit
             max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
@@ -96,30 +96,24 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             backLeftDrive.setPower(backLeftPower);
             backRightDrive.setPower(backRightPower);
 
-            // Toggle Launcher Power
-            boolean isLauncherOn = false;
-            boolean prevState = false;
             // Debugging
             int timesLauncherChanged = 0;
 
-            if (gamepadCross == 1.0 && !isLauncherOn)
+            if (gamepadCross == 1.0) // Motor OFF
             {
-                isLauncherOn = !isLauncherOn;
-
-                if (isLauncherOn)
-                {
-                    flywheelMotor.setPower(launcherPowerMod);
-                }
-                else
-                {
-                    flywheelMotor.setPower(0.0);
-                }
+                flywheelMotor.setPower(0 * launcherPower);
+            }
+            else if (gamepadCircle == 1.0) // Motor LOW
+            {
+                flywheelMotor.setPower(0.6 * launcherPower);
+            }
+            else if (gamepadSquare == 1.0) // Motor HIGH
+            {
+                flywheelMotor.setPower(0.65 * launcherPower);
             }
 
-            prevState = isLauncherOn;
-
-            feeder1.setPower(gamepadCircle);
-            feeder2.setPower(gamepadCircle);
+            feeder1.setPower(gamepadTriangle * 0.95);
+            feeder2.setPower(gamepadTriangle * 0.95);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Axial", axial);
